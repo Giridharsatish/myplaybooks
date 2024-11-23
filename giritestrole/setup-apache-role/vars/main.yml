@@ -1,0 +1,5 @@
+---
+# vars file for setup-apache-role
+
+httpd: "httpd"
+apache2: "apache2"

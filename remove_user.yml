@@ -1,0 +1,11 @@
+---
+
+- name: This playbook removes a user
+  hosts: all
+  become: true
+  tasks:
+    - name: removing a user
+      user: 
+       name: "giri"
+       state: absent
+    

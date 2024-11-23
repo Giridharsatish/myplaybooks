@@ -1,0 +1,37 @@
+---
+
+- name: Installing httpd
+  hosts: all
+  become: true
+
+  tasks:
+   - name: To install httpd
+     yum:
+       name: httpd
+       state: installed
+     when: ansible_os_family == "RedHat"
+
+   - name: Start httpd service
+     service:
+       name: http
+       state: started
+     when: ansible_os_family == "RedHat"
+     ignore_errors: yes
+
+   - name: To Install apache2 package
+     apt:
+       name: apache2
+       state: present
+     when: ansible_os_family == "Debian"
+
+   - name: start apache2 service
+     service:
+       name: apache2
+       state: started
+     when: ansible_os_family == "Debian"
+
+   - name: copying the index.html
+     copy:
+       src: /home/ansadmin/index.html
+       dest: /var/www/html
+       mode: 0777

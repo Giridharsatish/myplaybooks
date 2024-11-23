@@ -1,0 +1,10 @@
+---
+
+- name: To Install tree package
+  hosts: all
+  become: true
+  tasks:
+   - name: Installing a package
+     yum:
+       name: tree
+       state: latest

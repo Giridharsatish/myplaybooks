@@ -1,0 +1,42 @@
+---
+
+- name: Installing Tomcat on RedHat & Ubuntu
+  hosts: all
+  become: true
+
+  vars:
+     tomcat_version: 11.0.1
+
+  tasks:
+   - name: Install java on RedHat
+     yum:
+       name: java
+       state: installed
+     when: ansible_os_family == "RedHat"
+
+   - name: Install java on ubuntu
+     apt:
+       name: default-jdk
+       state: present
+     when: ansible_os_family == "Debian"
+
+   - name: Download tomcat package
+     get_url:
+       url: https://dlcdn.apache.org/tomcat/tomcat-11/v{{ tomcat_version }}/bin/apache-tomcat-{{ tomcat_version }}.tar.gz
+       dest: /opt
+
+   - name: Un tar / extract apache tomcat package
+     unarchive:
+       src: /opt/apache-tomcat-{{ tomcat_version }}.tar.gz
+       dest: /opt
+       remote_src: yes               #check for the packages in remote machine
+
+   - name: Grant executable permissions on startup.sh
+     file:
+       path: /opt/apache-tomcat-{{ tomcat_version }}/bin/startup.sh
+       mode: 0777
+
+   - name: start tomcat service
+     shell: nohup ./startup.sh          #nohup to run continuously
+     args: 
+       chdir: /opt/apache-tomcat-{{ tomcat_version }}/bin
